@@ -20,6 +20,18 @@ function App() {
       });
   }, []);
 
+  function displayForecast(item) {
+    return (
+      <div>
+          <h1>{item.name}</h1>
+          <img src={item.icon} alt="forecast icon"></img>
+          <p>{item.temperature}</p>
+          <p>{item.probabilityOfPrecipitation.value}</p>
+          <p>{item.detailedForecast}</p>
+      </div>
+    );
+  }
+
   if (forecast) {
     console.log(forecast);
     console.log(forecast.properties.periods[0].icon);
@@ -28,19 +40,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         {forecast ? (
-          <div>
-            <h1>{forecast.properties.periods[0].name}</h1>
-            <img src={forecast.properties.periods[0].icon} alt="forecast icon"></img>
-            <p>{forecast.properties.periods[0].temperature}</p>
-            <p>{forecast.properties.periods[0].probabilityOfPrecipitation.value}</p>
-            <p>{forecast.properties.periods[0].detailedForecast}</p>
-            <h1>{forecast.properties.periods[1].name}</h1>
-            <img src={forecast.properties.periods[1].icon} alt="forecast icon"></img>
-            <p>{forecast.properties.periods[1].temperature}</p>
-            <p>{forecast.properties.periods[1].probabilityOfPrecipitation.value}</p>
-            <p>{forecast.properties.periods[1].detailedForecast}</p>
-          </div>
-          
+          forecast.properties.periods.map(displayForecast)
         ) : (
           <p>Loading...</p>
         )}
