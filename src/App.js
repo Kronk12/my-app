@@ -4,12 +4,29 @@ import './App.css';
 function App() {
   const [forecast, setForecast] = useState(null);
 
+  // gets users location in latitude and longitude
   useEffect(() => {
-    fetch('https://api.weather.gov/gridpoints/IND/30,97/forecast', {
-      headers: new Headers({
-        'User-Agent' : 'Purdue student project'
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        getWeatherForecast(position.coords.latitude, position.coords.longitude);
+      }, handleError);
+    } else {
+      console.log('Geolocation is not supported by this browser.');
+    }
+  }, []);
+
+  // gets the weather forecast for the users location
+  const getWeatherForecast = (latitude, longitude) => {
+    fetch(`https://api.weather.gov/points/${latitude},${longitude}`)
+      .then((response) => response.json())
+      .then((result) => {
+        const forecastUrl = result.properties.forecast;
+        return fetch(forecastUrl, {
+          headers: {
+            'User-Agent': 'Purdue student project'
+          }
+        });
       })
-    })
       .then((response) => response.json())
       .then((result) => {
         setForecast(result);
@@ -17,7 +34,11 @@ function App() {
       .catch((error) => {
         console.error('Error fetching data:', error);
       });
-  }, []);
+  };
+
+  const handleError = (error) => {
+    console.error('Error getting user location:', error);
+  };
 
   console.log(forecast);
   return (
@@ -37,4 +58,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; 
