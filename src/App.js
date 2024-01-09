@@ -4,6 +4,7 @@ import './App.css';
 function App() {
   const [forecast, setForecast] = useState(null);
 
+
   // gets users location in latitude and longitude
   useEffect(() => {
     if (navigator.geolocation) {
@@ -40,16 +41,27 @@ function App() {
     console.error('Error getting user location:', error);
   };
 
-  console.log(forecast);
+  function displayForecast(item) {
+    return (
+      <div>
+          <h1>{item.name}</h1>
+          <img src={item.icon} alt="forecast icon"></img>
+          <p>{item.temperature}</p>
+          <p>{item.probabilityOfPrecipitation.value}</p>
+          <p>{item.detailedForecast}</p>
+      </div>
+    );
+  }
+
+  if (forecast) {
+    console.log(forecast);
+    console.log(forecast.properties.periods[0].icon);
+  }
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Forecast Today</h1>
         {forecast ? (
-          <div>
-            <p>{forecast.properties.periods[0].detailedForecast}</p>
-            <p>{forecast.punchline}</p>
-          </div>
+          forecast.properties.periods.map(displayForecast)
         ) : (
           <p>Loading...</p>
         )}
