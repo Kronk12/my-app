@@ -4,6 +4,7 @@ import './App.css';
 function App() {
   const [forecast, setForecast] = useState(null);
 
+
   useEffect(() => {
     fetch('https://api.weather.gov/gridpoints/IND/30,97/forecast', {
       headers: new Headers({
@@ -19,16 +20,27 @@ function App() {
       });
   }, []);
 
-  console.log(forecast);
+  if (forecast) {
+    console.log(forecast);
+    console.log(forecast.properties.periods[0].icon);
+  }
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Forecast Today</h1>
         {forecast ? (
           <div>
+            <h1>{forecast.properties.periods[0].name}</h1>
+            <img src={forecast.properties.periods[0].icon} alt="forecast icon"></img>
+            <p>{forecast.properties.periods[0].temperature}</p>
+            <p>{forecast.properties.periods[0].probabilityOfPrecipitation.value}</p>
             <p>{forecast.properties.periods[0].detailedForecast}</p>
-            <p>{forecast.punchline}</p>
+            <h1>{forecast.properties.periods[1].name}</h1>
+            <img src={forecast.properties.periods[1].icon} alt="forecast icon"></img>
+            <p>{forecast.properties.periods[1].temperature}</p>
+            <p>{forecast.properties.periods[1].probabilityOfPrecipitation.value}</p>
+            <p>{forecast.properties.periods[1].detailedForecast}</p>
           </div>
+          
         ) : (
           <p>Loading...</p>
         )}
